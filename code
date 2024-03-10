@@ -1,0 +1,132 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct {
+    int id;
+    char name[100];
+    int release_year;
+} Movie;
+
+#define MAX_MOVIES 100
+Movie movies[MAX_MOVIES];
+int num_movies = 0;
+
+void addNewMovieRecord() {
+    if (num_movies >= MAX_MOVIES) {
+        printf("Movie list is full!\n");
+        return;
+    }
+
+    Movie new_movie;
+    printf("Enter movie name: ");
+    scanf("%s", new_movie.name);
+    printf("Enter release year: ");
+    scanf("%d", &new_movie.release_year);
+
+    new_movie.id = num_movies + 1;
+    movies[num_movies++] = new_movie;
+
+    printf("Movie added successfully!\n");
+}
+
+void displayAllMovieRecords() {
+    printf("Movie List:\n");
+    printf("ID\tName\tRelease Year\n");
+    for (int i = 0; i < num_movies; i++) {
+        printf("%d\t%s\t%d\n", movies[i].id, movies[i].name, movies[i].release_year);
+    }
+}
+void editMovieRecord() {
+    int id;
+    printf("Enter movie ID to edit: ");
+    scanf("%d", &id);
+
+    for (int i = 0; i < num_movies; i++) {
+        if (movies[i].id == id) {
+            printf("Enter new name: ");
+            scanf("%s", movies[i].name);
+            printf("Enter new release year: ");
+            scanf("%d", &movies[i].release_year);
+            printf("Movie record updated successfully!\n");
+            return;
+        }
+    }
+
+    printf("Movie with ID %d not found!\n", id);
+}
+ 
+void deleteMovieRecord() {
+    int id;
+    printf("Enter movie ID to delete: ");
+    scanf("%d", &id);
+
+    for (int i = 0; i < num_movies; i++) {
+        if (movies[i].id == id) {
+            for (int j = i; j < num_movies - 1; j++) {
+                movies[j] = movies[j + 1];
+            }
+            num_movies--;
+            printf("Movie deleted successfully!\n");
+            return;
+        }
+    }
+
+    printf("Movie with ID %d not found!\n", id);
+}
+
+
+void searchMovie() {
+    char query[100];
+    printf("Enter movie name or release year to search: ");
+    scanf("%s", query);
+
+    printf("Search Results:\n");
+    printf("ID\tName\tRelease Year\n");
+    for (int i = 0; i < num_movies; i++) {
+        if (strstr(movies[i].name, query) != NULL || movies[i].release_year == atoi(query)) {
+            printf("%d\t%s\t%d\n", movies[i].id, movies[i].name, movies[i].release_year);
+        }
+    }
+}
+
+int main() {
+    int choice;
+    
+    do {
+        printf("\nMovie Management System\n");
+        printf("1. Add New Movie Record\n");
+        printf("2. Display All Movie Records\n");
+        printf("3. Edit Movie Record by movie ID\n");
+        printf("4. Delete Movie from a list by ID\n");
+        printf("5. Search Movie by name or release date\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                addNewMovieRecord();
+                break;
+            case 2:
+                displayAllMovieRecords();
+                break;
+            case 3:
+                editMovieRecord();
+                break;
+            case 4:
+                deleteMovieRecord();
+                break;
+            case 5:
+                searchMovie();
+                break;
+            case 6:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice! Please enter a number between 1 and 6.\n");
+        }
+    } while (choice != 6);
+
+    return 0;
+}
